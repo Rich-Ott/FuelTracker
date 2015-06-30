@@ -4,21 +4,39 @@ BASEDIR = $$quote($$_PRO_FILE_PWD_)
 device {
     CONFIG(debug, debug|release) {
         profile {
-            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/system)
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/platform) \
+                $$quote(${QNX_TARGET}/usr/include/bb/data) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore) \
+                $$quote(${QNX_TARGET}/usr/include/bb/system)
 
-            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/system)
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/platform) \
+                $$quote(${QNX_TARGET}/usr/include/bb/data) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore) \
+                $$quote(${QNX_TARGET}/usr/include/bb/system)
 
-            LIBS += -lbbsystem
+            LIBS += -lQtCore \
+                -lbbdata \
+                -lbbsystem \
+                -lbbplatform
 
             CONFIG += \
                 config_pri_assets \
                 config_pri_source_group1
         } else {
-            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/system)
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/platform) \
+                $$quote(${QNX_TARGET}/usr/include/bb/data) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore) \
+                $$quote(${QNX_TARGET}/usr/include/bb/system)
 
-            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/system)
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/platform) \
+                $$quote(${QNX_TARGET}/usr/include/bb/data) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore) \
+                $$quote(${QNX_TARGET}/usr/include/bb/system)
 
-            LIBS += -lbbsystem
+            LIBS += -lQtCore \
+                -lbbdata \
+                -lbbsystem \
+                -lbbplatform
 
             CONFIG += \
                 config_pri_assets \
@@ -29,11 +47,20 @@ device {
 
     CONFIG(release, debug|release) {
         !profile {
-            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/system)
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/platform) \
+                $$quote(${QNX_TARGET}/usr/include/bb/data) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore) \
+                $$quote(${QNX_TARGET}/usr/include/bb/system)
 
-            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/system)
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/platform) \
+                $$quote(${QNX_TARGET}/usr/include/bb/data) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore) \
+                $$quote(${QNX_TARGET}/usr/include/bb/system)
 
-            LIBS += -lbbsystem
+            LIBS += -lQtCore \
+                -lbbdata \
+                -lbbsystem \
+                -lbbplatform
 
             CONFIG += \
                 config_pri_assets \
@@ -45,11 +72,20 @@ device {
 simulator {
     CONFIG(debug, debug|release) {
         !profile {
-            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/system)
+            INCLUDEPATH += $$quote(${QNX_TARGET}/usr/include/bb/platform) \
+                $$quote(${QNX_TARGET}/usr/include/bb/data) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore) \
+                $$quote(${QNX_TARGET}/usr/include/bb/system)
 
-            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/system)
+            DEPENDPATH += $$quote(${QNX_TARGET}/usr/include/bb/platform) \
+                $$quote(${QNX_TARGET}/usr/include/bb/data) \
+                $$quote(${QNX_TARGET}/usr/include/qt4/QtCore) \
+                $$quote(${QNX_TARGET}/usr/include/bb/system)
 
-            LIBS += -lbbsystem
+            LIBS += -lQtCore \
+                -lbbdata \
+                -lbbsystem \
+                -lbbplatform
 
             CONFIG += \
                 config_pri_assets \
@@ -60,6 +96,7 @@ simulator {
 
 config_pri_assets {
     OTHER_FILES += \
+        $$quote($$BASEDIR/assets/FuelTransactionModel.qml) \
         $$quote($$BASEDIR/assets/FuelTransactionPage/FuelTransactionPage.qml) \
         $$quote($$BASEDIR/assets/data/v100.db) \
         $$quote($$BASEDIR/assets/images/add.png) \
@@ -71,9 +108,12 @@ config_pri_assets {
 config_pri_source_group1 {
     SOURCES += \
         $$quote($$BASEDIR/src/FuelTrackerApp.cpp) \
+        $$quote($$BASEDIR/src/FuelTrackerDataSource.cpp) \
         $$quote($$BASEDIR/src/main.cpp)
 
-    HEADERS += $$quote($$BASEDIR/src/FuelTrackerApp.h)
+    HEADERS += \
+        $$quote($$BASEDIR/src/FuelTrackerApp.h) \
+        $$quote($$BASEDIR/src/FuelTrackerDataSource.h)
 }
 
 CONFIG += precompile_header

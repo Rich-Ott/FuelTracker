@@ -1,6 +1,7 @@
 1
-6
+7
 data/v100.db
+FuelTransactionModel.qml
 FuelTransactionPage/FuelTransactionPage.qml
 images/add.png
 images/delete.png

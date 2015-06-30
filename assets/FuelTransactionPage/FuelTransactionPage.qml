@@ -1,5 +1,5 @@
-import bb.cascades 1.2
-import bb.system 1.2
+import bb.cascades 1.3
+import com.FuelTracker.data 1.0
 
 Page {
     id: fuelTransactionPage
@@ -26,7 +26,6 @@ Page {
         id: editPane
         property real margins: 40
         property real controlPadding: 10
-        background: Color.create("#f8f8f8")
         topPadding: editPane.margins
         leftPadding: editPane.margins
         rightPadding: editPane.margins
@@ -180,5 +179,6 @@ Page {
     }
     function newFuelTransaction() {
         // TODO: disable save button and perform any other initialization
+        
     }
 }

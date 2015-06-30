@@ -76,4 +76,23 @@
         <translation type="unfinished"></translation>
     </message>
 </context>
+<context>
+    <name>main</name>
+    <message>
+        <source>Add</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This will remove all transactions and cannot be undone. Are you sure you want to do this?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
 </TS>

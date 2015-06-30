@@ -20,16 +20,30 @@
 #include <bb/cascades/Application>
 #include <QObject>
 
+namespace bb
+{
+    namespace cascades
+    {
+        class LocaleHandler;
+    }
+}
+
+class QTranslator;
+
 class FuelTrackerApp : public QObject
 {
-   // Q_OBJECT
-public:
-    FuelTrackerApp();
-    virtual ~FuelTrackerApp();
+    Q_OBJECT
 
-    void onStart();
-private:
-    bool loadQMLScene();
+    public:
+        FuelTrackerApp(QObject *parent = 0);
+        virtual ~FuelTrackerApp();
+
+        void onStart();
+    private:
+        Q_SLOT void onSystemLanguageChanged();
+        QTranslator* mTranslator;
+        bb::cascades::LocaleHandler* mLocaleHandler;
+        bool loadQMLScene();
 };
 
 #endif /* FUELTRACKERAPP_H_ */

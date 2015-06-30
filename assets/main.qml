@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-import bb.cascades 1.2
+import bb.cascades 1.3
+import bb.data 1.0
+import bb.system 1.2
 import "FuelTransactionPage"
+import com.FuelTracker.data 1.0
 
 Page {
+    id: transactionListPage
+
     property variant currentItem
     property bool addShown : false
 
@@ -27,12 +32,14 @@ Page {
             objectName: "transactionList"
             layout: StackListLayout {        
             }
+            
             dataModel: transactionModel
+            
             listItemComponents: [
                 ListItemComponent {
                     type: "item"
                     StandardListItem {
-                        imageSpaceReserved: false
+                        id: transactionItem
                         title: {
                             ListItemData.toString()
                         }
@@ -47,24 +54,22 @@ Page {
                 currentItem = chosenItem;
             }
             attachedObjects: [
-                GroupDataModel {
+                FuelTransactionModel {
                     id: transactionModel
-                    objectName: "transactionModel"
-                    grouping: ItemGrouping.ByFirstChar
-                    sortingKeys: [""]
-                    onItemAdded: {
-                        if (addShown) {
-                            transactionList.clearSelection();
-                            transactionList.select(indexPath);
-                            transactionList.scrollToItem(indexPath, ScrollAnimation.Default);
+                },
+                FuelTrackerDataSource {
+                    id: fuelTrackerDataSource
+                    source: "data/v100.db"
+                    query: "SELECT * FROM FuelTransaction ORDER BY Date LIMIT 20"
+                    property int loadCounter: 0
+                    
+                    onDataLoaded: {
+                        if(data.length > 0) {
+                            transactionModel.insertList(data);
+                            var offsetData = {"offset": (20 + 5 * loadCounter)};
+                            execute("SELECT * FROM FuelTransaction ORDER BY Date LIMIT 5 OFFSET :offset", offsetData, 0); 
+                            loadCounter++;
                         }
-                    }
-                    onItemRemoved: {
-                        var lastIndexPath = last();
-                    }
-                    onItemUpdated: {
-                        var chosenItem = data(indexPath);
-                        currentItem = chosenItem;
                     }
                 },
                 Sheet {
@@ -76,21 +81,63 @@ Page {
                         }
                     }
                     onClosed: {
-                        add.newTransaction();
+                        add.newFuelTransaction();
+                    }
+                },
+                SystemDialog {
+                    id: confirmClearDialog
+                    title: qsTr("Are you sure?") + Retranslate.onLanguageChanged
+                    body: qsTr("This will remove all transactions and cannot be undone. Are you sure you want to do this?") + Retranslate.onLanguageChanged
+                    onFinished: {
+                        if(confirmClearDialog.result == SystemUiResult.ConfirmButtonSelection) {
+                            clearFuelTransactions();
+                        }                        
                     }
                 }
             ]
+            
+            onCreationCompleted: {
+                fuelTrackerDataSource.load();
+            }
+            
+            shortcuts: [
+                SystemShortcut {
+                    type: SystemShortcuts.CreateNew
+                    onTriggered: {
+                        addSheet.open()
+                        addShown = true;
+                    }
+                }
+            ]
+            accessibility.name: "Transaction List"
         }
     }
     actions: [
         ActionItem {
-            title: "Add"
+            title: qsTr("Add") + Retranslate.onLanguageChanged
             imageSource: "asset:///images/add.png"
-            ActionBar.placement: ActionBarPlacement.OnBar
+            ActionBar.placement: ActionBarPlacement.Signature
             onTriggered: {
                 addSheet.open();
                 addShown = true;
             }
+        },
+        ActionItem {
+            title: qsTr("Clear") + Retranslate.onLanguageChanged
+            ActionBar.placement: ActionBarPlacement.InOverflow
+            onTriggered: {
+                confirmClearDialog.show();
+            }
         }
     ]
+    
+    function deleteFuelTransaction() {
+        var itemData = {"id": transactionListPage.currentItem["id"]};
+        fuelTrackerDataSource.execute("DELETE FROM FuelTransaction WHERE id=:id", itemData);
+        transactionList.dataModel.remove(transactionListPage.currentItem);
+    }
+    function clearFuelTransactions() {
+        fuelTrackerDataSource.execute("DELETE FROM FuelTransaction", null);
+        transactionList.dataModel.clear();
+    }
 }

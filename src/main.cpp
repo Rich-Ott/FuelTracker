@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-#include <bb/cascades/Application>
-#include <bb/system/SystemUiInputField>
-#include <bb/system/SystemUiInputMode>
-
 #include "FuelTrackerApp.h"
+#include <Qt/qdeclarativedebug.h>
 
 using namespace bb::cascades;
 
+
+void myMessageOutput(QtMsgType type, const char* msg){
+    Q_UNUSED(type);
+    fprintf(stdout, "%s\n", msg);
+    fflush(stdout);
+}
+
 Q_DECL_EXPORT int main(int argc, char **argv)
 {
-    qmlRegisterType<bb::system::SystemUiInputField>("bb.system", 1, 0, "SystemUiInputField");
+    qInstallMsgHandler(myMessageOutput);
 
     Application app(argc, argv);
 
