@@ -30,6 +30,7 @@ Page {
         ListView {
             id: transactionList
             objectName: "transactionList"
+            
             layout: StackListLayout {        
             }
             
@@ -37,11 +38,17 @@ Page {
             
             listItemComponents: [
                 ListItemComponent {
+                    type: "header"
+                },
+                ListItemComponent {
                     type: "item"
                     StandardListItem {
                         id: transactionItem
                         title: {
-                            ListItemData.toString()
+                            new Date(ListItemData.Date * 1000).toLocaleDateString()
+                        }
+                        description: {
+                            (ListItemData.FuelEconomy / 100.0).toString()
                         }
                     }
                 }
@@ -81,7 +88,7 @@ Page {
                         }
                     }
                     onClosed: {
-                        add.newFuelTransaction();
+                        //add.newFuelTransaction();
                     }
                 },
                 SystemDialog {
@@ -118,6 +125,7 @@ Page {
             imageSource: "asset:///images/add.png"
             ActionBar.placement: ActionBarPlacement.Signature
             onTriggered: {
+                add.addNewFuelTransaction.connect(addNewFuelTransaction);
                 addSheet.open();
                 addShown = true;
             }
@@ -140,4 +148,9 @@ Page {
         fuelTrackerDataSource.execute("DELETE FROM FuelTransaction", null);
         transactionList.dataModel.clear();
     }
+    function addNewFuelTransaction(timestamp, distance, odometer, quantity, economy, price, cost, full, location, pump) {
+        var itemData = {"Date": timestamp, "Distance": distance, "Odometer": odometer, "Quantity": quantity, "FuelEconomy": economy, "PricePerQuantity": price, "FuelCost": cost, "FilledTank": full, "Location": location, "Pump": pump}
+        fuelTrackerDataSource.execute("INSERT INTO FuelTransaction (Date, Distance, Odometer, Quantity, FuelEconomy, PricePerQuantity, FuelCost, FilledTank, Location, Pump) VALUES (:Date, :Distance, :Odometer, :Quantity, :FuelEconomy, :PricePerQuantity, :FuelCost, :FilledTank, :Location, :Pump)", itemData);
+        transactionList.dataModel.insert(itemData);
+    }    
 }

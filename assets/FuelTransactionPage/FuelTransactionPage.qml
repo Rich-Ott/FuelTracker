@@ -4,6 +4,7 @@ import com.FuelTracker.data 1.0
 Page {
     id: fuelTransactionPage
     signal fuelTransactionPageClose()
+    signal addNewFuelTransaction(int timestamp, int distance, int odometer, int quantity, int economy, int price, int cost, int full, string location, string pump)
     titleBar: TitleBar {
         id: updateBar
         title: "Add"
@@ -17,7 +18,19 @@ Page {
         acceptAction: ActionItem {
             title: "Save"
             onTriggered: {
-               // fuelTrackerApp.addNewRecord();
+                // TODO: validate input data
+                addNewFuelTransaction(
+                    parseInt(dateField.value.getTime() / 1000),
+                    parseInt(parseFloat(distanceField.text) * 100),
+                    parseInt(parseFloat(odometerField.text) * 100),
+                    parseInt(parseFloat(quantityField.text) * 100),
+                    parseInt(parseFloat(distanceField.text) / parseFloat(quantityField.text) * 100),
+                    parseInt(parseFloat(pricePerQuantityField.text) * 1000),
+                    parseInt(parseFloat(fuelCostField.text) * 1000),
+                    filledTankField.checked ? 1 : 0,
+                    locationField.text,
+                    pumpField.text
+                );
                 fuelTransactionPageClose();
             }
         }
@@ -52,6 +65,14 @@ Page {
                 id: distanceField
                 hintText: qsTr("Enter Distance")
                 inputMode: TextFieldInputMode.NumbersAndPunctuation
+                onTextChanged: {
+                    var qty = parseFloat(quantityField.text);
+                    var distance = parseFloat(text)
+                    fuelEconomyField.text = fuelTransactionPage.calculateFuelEconomy(distance, qty);
+                }
+                onTextChanging: {
+                    distanceField.text = fuelTransactionPage.validateNumericInput(text, 2);
+                }
             }
         }
         
@@ -69,6 +90,14 @@ Page {
             TextField {
                 id: quantityField
                 hintText: qsTr("Enter Quantity")
+                onTextChanged: {
+                    var qty = parseFloat(text);
+                    var distance = parseFloat(distanceField.text)
+                    fuelEconomyField.text = fuelTransactionPage.calculateFuelEconomy(distance, qty);
+                }
+                onTextChanging: {
+                    quantityField.text = fuelTransactionPage.validateNumericInput(text, 2);
+                }
             }
         }
         
@@ -102,7 +131,6 @@ Page {
             TextField {
                 id: odometerField
                 hintText: qsTr("Odometer Reading (optional)")
-                //inputMode: SystemUiInputMode.NumericKeypad
             }
         }
         
@@ -177,8 +205,35 @@ Page {
             }
         }
     }
-    function newFuelTransaction() {
-        // TODO: disable save button and perform any other initialization
-        
+    // validates numeric input to only accept numbers and
+    // decimal places up to "floatScale" decimal places
+    function validateNumericInput(text, floatScale) {
+        var result = String(text);
+        result = result.replace(/[^\d.]/g,'');
+
+        // Only allow a single decimal place
+        if(result.split(".").length >= 3) {
+            result = result.substring(0, result.length  -1);
+        }
+
+        // total floating point precision plus 1 is used
+        // to determine the max string length allowed
+        var decimalIndex = result.indexOf(".");
+        if(decimalIndex != -1) {
+            var precision = decimalIndex + floatScale + 1;
+            if(precision < result.length) {
+                result = result.substring(0, precision);
+            }
+        }
+        return result;
+    }
+    // returns fuel economy rounded to two decimal places
+    function calculateFuelEconomy(distance, quantity) {
+        var valuesAreNumeric = (isFinite(distance) && isFinite(quantity));
+        if(!valuesAreNumeric || quantity === 0) {
+            return 0;
+        }
+        distance
+        return parseFloat(distance / quantity).toFixed(2);
     }
 }

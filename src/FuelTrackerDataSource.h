@@ -22,10 +22,6 @@ namespace bb
     }
 }
 
-class D : public QObject
-{
-};
-
 class FuelTrackerDataSource : public QObject
 {
     Q_OBJECT
