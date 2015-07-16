@@ -38,14 +38,13 @@ Page {
             
             listItemComponents: [
                 ListItemComponent {
-                    type: "header"
-                },
-                ListItemComponent {
                     type: "item"
                     StandardListItem {
                         id: transactionItem
                         title: {
-                            new Date(ListItemData.Date * 1000).toLocaleDateString()
+                            // 1 is the value of the Qt::ISODate DateFormat which
+                            // is apparently not available from Cascades
+                            Qt.formatDate(new Date(ListItemData.Date * 1000), 1)
                         }
                         description: {
                             (ListItemData.FuelEconomy / 100.0).toString()
