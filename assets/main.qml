@@ -39,23 +39,73 @@ Page {
             listItemComponents: [
                 ListItemComponent {
                     type: "item"
-                    StandardListItem {
-                        id: transactionItem
-                        title: {
-                            // 1 is the value of the Qt::ISODate DateFormat which
-                            // is apparently not available from Cascades
-                            Qt.formatDate(new Date(ListItemData.Date * 1000), 1)
+
+                    CustomListItem {
+                        dividerVisible: true
+                        highlightAppearance: HighlightAppearance.Frame
+                        id: listItem
+                        Container {
+                            layout: StackLayout {
+                                orientation: LayoutOrientation.LeftToRight
+                            }
+                            Container {
+                                layout: StackLayout {
+                                    orientation: LayoutOrientation.TopToBottom
+                                }
+                                layoutProperties: StackLayoutProperties {
+                                    spaceQuota: 1
+                                }
+                                Label {
+                                    textStyle.fontSize: FontSize.PercentageValue
+                                    textStyle.fontSizeValue: 135.0
+                                    textStyle.fontStyle: FontStyle.Italic
+                                    // 1 is the value of the Qt::ISODate DateFormat which
+                                    // is apparently not available from Cascades
+                                    text: Qt.formatDate(new Date(ListItemData.Date * 1000), 1)
+                                }
+                                Label {
+                                    topMargin: 0
+                                    verticalAlignment: VerticalAlignment.Center
+                                    text: (ListItemData.Distance / 100.0).toString()
+                                }
+                            }
+                            Label {
+                                layoutProperties: StackLayoutProperties {
+                                    spaceQuota: -1
+                                }
+                                verticalAlignment: VerticalAlignment.Center
+                                textStyle.fontSize: FontSize.PercentageValue
+                                textStyle.fontSizeValue: 180.0
+                                textStyle.fontWeight: FontWeight.Bold
+                                text: (ListItemData.FuelEconomy / 100.0).toString()
+                            }
                         }
-                        description: {
-                            (ListItemData.FuelEconomy / 100.0).toString()
-                        }
+                        contextActions: [
+                            ActionSet {
+                                title: qsTr("Transaction") + Retranslate.onLanguageChanged
+                                ActionItem {
+                                    title: qsTr("Edit") + Retranslate.onLanguageChanged
+                                    imageSource: "asset:///images/edit.png"
+                                }
+                                ActionItem {
+                                    title: qsTr("Delete") + Retranslate.onLanguageChanged
+                                    imageSource: "asset:///images/delete.png"
+                                    onTriggered: {
+                                        var m = listItem.ListItem.indexPath
+                                        // transactionModel.remove(ListItem.indexPath)
+                                    }
+                                }
+                            }
+                        ]
                     }
                 }
             ]
             onTriggered: {
+                clearSelection()
                 select(indexPath)
             }
             onSelectionChanged: {
+                // TODO: move this to onTriggered?
                 var chosenItem = dataModel.data(indexPath);
                 currentItem = chosenItem;
             }
@@ -116,6 +166,10 @@ Page {
                 }
             ]
             accessibility.name: "Transaction List"
+            function deleteTransaction(data) {
+                data["id"]
+            }
+            
         }
     }
     actions: [
