@@ -35,181 +35,189 @@ Page {
             }
         }
     }
-    Container {
-        id: editPane
-        property real margins: 40
-        property real controlPadding: 10
-        topPadding: editPane.margins
-        leftPadding: editPane.margins
-        rightPadding: editPane.margins
-        layout: StackLayout {            
-        }
-        
-        DateTimePicker {
-            id: dateField
-            title: qsTr("Date:")
-            mode: DateTimePickerMode.Date
-        }
-        
+    ScrollView {
+        scrollViewProperties.scrollMode: ScrollMode.Vertical
         Container {
-            topPadding: editPane.controlPadding
-            bottomPadding: editPane.controlPadding
+            id: editPane
+            property real margins: 40
+            property real controlPadding: 10
+            topPadding: editPane.margins
+            leftPadding: editPane.margins
+            rightPadding: editPane.margins
             layout: StackLayout {
-                orientation: LayoutOrientation.LeftToRight
             }
-            Label {
-                text: qsTr("Distance:")
-                verticalAlignment: VerticalAlignment.Center
-            }
-            TextField {
-                id: distanceField
-                hintText: qsTr("Enter Distance")
-                inputMode: TextFieldInputMode.NumbersAndPunctuation
-                onTextChanged: {
-                    var qty = parseFloat(quantityField.text);
-                    var distance = parseFloat(text)
-                    fuelEconomyField.text = fuelTransactionPage.calculateFuelEconomy(distance, qty);
-                }
-                onTextChanging: {
-                    distanceField.text = fuelTransactionPage.validateNumericInput(text, 2);
-                }
-            }
-        }
-        
-        Container {
-            topPadding: editPane.controlPadding
-            bottomPadding: editPane.controlPadding
-            layout: StackLayout {
-                orientation: LayoutOrientation.LeftToRight
-            }
-            Label {
-                //objectName: quantityLabel
-                text: qsTr("Quantity:")
-                verticalAlignment: VerticalAlignment.Center
-            }
-            TextField {
-                id: quantityField
-                hintText: qsTr("Enter Quantity")
-                onTextChanged: {
-                    var qty = parseFloat(text);
-                    var distance = parseFloat(distanceField.text)
-                    fuelEconomyField.text = fuelTransactionPage.calculateFuelEconomy(distance, qty);
-                }
-                onTextChanging: {
-                    quantityField.text = fuelTransactionPage.validateNumericInput(text, 2);
-                }
-            }
-        }
-        
-        Container {
-            topPadding: editPane.controlPadding
-            bottomPadding: editPane.controlPadding
-            layout: StackLayout {
-                orientation: LayoutOrientation.LeftToRight
-            }
-            Label {
-                text: qsTr("Fuel Economy:")
-                verticalAlignment: VerticalAlignment.Center
-            }
-            TextField {
-                id: fuelEconomyField
-                hintText: qsTr("Calculated Fuel Economy")
-                enabled: false
-            }
-        }
-        
-        Container {
-            topPadding: editPane.controlPadding
-            bottomPadding: editPane.controlPadding
-            layout: StackLayout {
-                orientation: LayoutOrientation.LeftToRight
-            }
-            Label {
-                text: qsTr("Odometer:")
-                verticalAlignment: VerticalAlignment.Center
-            }
-            TextField {
-                id: odometerField
-                hintText: qsTr("Odometer Reading (optional)")
-            }
-        }
-        
-        Container {
-            topPadding: editPane.controlPadding
-            bottomPadding: editPane.controlPadding
-            layout: StackLayout {
-                orientation: LayoutOrientation.LeftToRight
-            }
-            Label {
-                //objectName: pricePerQuantityLabel
-                text: qsTr("Price per Quantity:")
-                verticalAlignment: VerticalAlignment.Center
-            }
-            TextField {
-                id: pricePerQuantityField
-                hintText: qsTr("Enter price (optional)")
-            }
-        }
 
-        Container {
-            topPadding: editPane.controlPadding
-            bottomPadding: editPane.controlPadding
-            layout: StackLayout {
-                orientation: LayoutOrientation.LeftToRight
+            DateTimePicker {
+                id: dateField
+                title: qsTr("Date:")
+                mode: DateTimePickerMode.Date
             }
-            Label {
-                text: qsTr("Fuel Cost:")
-                verticalAlignment: VerticalAlignment.Center
+
+            Container {
+                topPadding: editPane.controlPadding
+                bottomPadding: editPane.controlPadding
+                layout: StackLayout {
+                    orientation: LayoutOrientation.LeftToRight
+                }
+                Label {
+                    text: qsTr("Distance:")
+                    verticalAlignment: VerticalAlignment.Center
+                }
+                TextField {
+                    id: distanceField
+                    hintText: qsTr("Enter Distance")
+                    inputMode: TextFieldInputMode.NumbersAndPunctuation
+                    onTextChanged: {
+                        var qty = parseFloat(quantityField.text);
+                        var distance = parseFloat(text)
+                        fuelEconomyField.text = fuelTransactionPage.calculateFuelEconomy(distance, qty);
+                    }
+                    onTextChanging: {
+                        distanceField.text = fuelTransactionPage.validateNumericInput(text, 2);
+                    }
+                }
             }
-            TextField {
-                id: fuelCostField
-                hintText: qsTr("Enter total fuel cost (optional)")
+            
+            Container {
+                topPadding: editPane.controlPadding
+                bottomPadding: editPane.controlPadding
+                layout: StackLayout {
+                    orientation: LayoutOrientation.LeftToRight
+                }
+                Label {
+                    //objectName: quantityLabel
+                    text: qsTr("Quantity:")
+                    verticalAlignment: VerticalAlignment.Center
+                }
+                TextField {
+                    id: quantityField
+                    hintText: qsTr("Enter Quantity")
+                    onTextChanged: {
+                        var qty = parseFloat(text);
+                        var distance = parseFloat(distanceField.text)
+                        fuelEconomyField.text = fuelTransactionPage.calculateFuelEconomy(distance, qty);
+                    }
+                    onTextChanging: {
+                        quantityField.text = fuelTransactionPage.validateNumericInput(text, 2);
+                    }
+                }
             }
-        }
-        
-        CheckBox {
-            id: filledTankField
-            text: qsTr("Filled tank?")
-            checked:true
-        }
-        
-        Container {
-            topPadding: editPane.controlPadding
-            bottomPadding: editPane.controlPadding
-            layout: StackLayout {
-                orientation: LayoutOrientation.LeftToRight
+            
+            Container {
+                topPadding: editPane.controlPadding
+                bottomPadding: editPane.controlPadding
+                layout: StackLayout {
+                    orientation: LayoutOrientation.LeftToRight
+                }
+                Label {
+                    text: qsTr("Fuel Economy:")
+                    verticalAlignment: VerticalAlignment.Center
+                }
+                TextField {
+                    id: fuelEconomyField
+                    hintText: qsTr("Calculated Fuel Economy")
+                    enabled: false
+                }
             }
-            Label {
-                text: qsTr("Location:")
-                verticalAlignment: VerticalAlignment.Center
+            
+            Container {
+                topPadding: editPane.controlPadding
+                bottomPadding: editPane.controlPadding
+                layout: StackLayout {
+                    orientation: LayoutOrientation.LeftToRight
+                }
+                Label {
+                    text: qsTr("Odometer:")
+                    verticalAlignment: VerticalAlignment.Center
+                }
+                TextField {
+                    id: odometerField
+                    hintText: qsTr("Odometer Reading (optional)")
+                }
             }
-            TextField {
-                id: locationField
-                hintText: qsTr("Enter location (optional)")
+            
+            Container {
+                topPadding: editPane.controlPadding
+                bottomPadding: editPane.controlPadding
+                layout: StackLayout {
+                    orientation: LayoutOrientation.LeftToRight
+                }
+                Label {
+                    //objectName: pricePerQuantityLabel
+                    text: qsTr("Price per Quantity:")
+                    verticalAlignment: VerticalAlignment.Center
+                }
+                TextField {
+                    id: pricePerQuantityField
+                    hintText: qsTr("Enter price (optional)")
+                }
             }
-        }
-        
-        Container {
-            topPadding: editPane.controlPadding
-            bottomPadding: editPane.controlPadding
-            layout: StackLayout {
-                orientation: LayoutOrientation.LeftToRight
+    
+            Container {
+                topPadding: editPane.controlPadding
+                bottomPadding: editPane.controlPadding
+                layout: StackLayout {
+                    orientation: LayoutOrientation.LeftToRight
+                }
+                Label {
+                    text: qsTr("Fuel Cost:")
+                    verticalAlignment: VerticalAlignment.Center
+                }
+                TextField {
+                    id: fuelCostField
+                    hintText: qsTr("Enter total fuel cost (optional)")
+                }
             }
-            Label {
-                text: qsTr("Pump:")
-                verticalAlignment: VerticalAlignment.Center
+            
+            CheckBox {
+                id: filledTankField
+                text: qsTr("Filled tank?")
+                checked:true
             }
-            TextField {
-                id: pumpField
-                hintText: qsTr("Enter pump (optional)")
+            
+            Container {
+                topPadding: editPane.controlPadding
+                bottomPadding: editPane.controlPadding
+                layout: StackLayout {
+                    orientation: LayoutOrientation.LeftToRight
+                }
+                Label {
+                    text: qsTr("Location:")
+                    verticalAlignment: VerticalAlignment.Center
+                }
+                TextField {
+                    id: locationField
+                    hintText: qsTr("Enter location (optional)")
+                }
+            }
+            
+            Container {
+                topPadding: editPane.controlPadding
+                bottomPadding: editPane.controlPadding
+                layout: StackLayout {
+                    orientation: LayoutOrientation.LeftToRight
+                }
+                Label {
+                    text: qsTr("Pump:")
+                    verticalAlignment: VerticalAlignment.Center
+                }
+                TextField {
+                    id: pumpField
+                    hintText: qsTr("Enter pump (optional)")
+                }
             }
         }
     }
+    
     // validates numeric input to only accept numbers and
     // decimal places up to "floatScale" decimal places
     function validateNumericInput(text, floatScale) {
         var result = String(text);
-        result = result.replace(/[^\d.]/g,'');
+        // TODO: replace the decimal point with a
+        //       localized version from QLocale 
+        var pattern = "[^\\d.]";
+        var regex = new RegExp(pattern, "g");
+        result = result.replace(regex, "");
 
         // Only allow a single decimal place
         if(result.split(".").length >= 3) {
